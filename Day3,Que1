@@ -1,0 +1,29 @@
+//Implement linear search to find key k in an array. Count and display the number of comparisons performed.
+#include <stdio.h>
+
+int main()
+{
+    int arr[] = {10, 23, 11, 89, 1, 14, 3};
+    int n = 7;
+    int k = 11;      
+    int found = 0;
+    int count = 0;
+
+    for(int i = 0; i < n; i++)
+    {
+        count++;              
+        if(arr[i] == k)
+        {
+            printf("Key found at index %d\n", i);
+            found = 1;
+            break;
+        }
+    }
+    if(found == 0)
+    {
+        printf("Key not found\n");
+    }
+printf("Number of comparisons = %d", count);
+
+    return 0;
+}
