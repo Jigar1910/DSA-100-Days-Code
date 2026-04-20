@@ -1,0 +1,32 @@
+//A secret system stores code names in forward order. To display them in mirror format, you must transform the given code name so that its characters appear in the opposite order.
+
+#include <stdio.h>
+#include <string.h>
+
+void reverse(char str[], int start, int end) {
+    if(start >= end)
+        return;
+
+    // swap characters
+    char temp = str[start];
+    str[start] = str[end];
+    str[end] = temp;
+
+    // recursive call
+    reverse(str, start + 1, end - 1);
+}
+
+int main() {
+    char str[100];
+
+    printf("Enter code name: ");
+    scanf("%s", str);
+
+    int n = strlen(str);
+
+    reverse(str, 0, n - 1);
+
+    printf("Mirror format: %s\n", str);
+
+    return 0;
+}
