@@ -1,0 +1,37 @@
+//Given an m x n matrix, return true if the matrix is Toeplitz. Otherwise, return false.
+//A matrix is Toeplitz if every diagonal from top-left to bottom-right has the same elements.
+#include <stdio.h>
+
+int main() {
+    int rows, cols;
+
+    printf("Enter rows and columns: ");
+    scanf("%d %d", &rows, &cols);
+
+    int matrix[rows][cols];
+    int isToeplitz = 1;
+    printf("\nEnter elements:\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+    for(int i = 1; i < rows; i++) {
+        for(int j = 1; j < cols; j++) {
+            if(matrix[i][j] != matrix[i-1][j-1]) {
+                isToeplitz = 0;
+                break;
+            }
+        }
+        if(isToeplitz == 0)
+            break;
+    }
+  
+    if(isToeplitz)
+        printf("\nMatrix is Toeplitz");
+    else
+        printf("\nMatrix is NOT Toeplitz");
+
+    return 0;
+}
+ 
