@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int val;
+    struct Node* next;
+};
+
+// Add two numbers
+struct Node* addTwoNumbers(struct Node* l1, struct Node* l2) {
+    struct Node dummy;
+    dummy.next = NULL;
+
+    struct Node* tail = &dummy;
+    int carry = 0;
+
+    while (l1 || l2 || carry) {
+        int sum = carry;
+
+        if (l1) {
+            sum += l1->val;
+            l1 = l1->next;
+        }
+        if (l2) {
+            sum += l2->val;
+            l2 = l2->next;
+        }
+
+        struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+        newNode->val = sum % 10;
+        newNode->next = NULL;
+
+        tail->next = newNode;
+        tail = newNode;
+
+        carry = sum / 10;
+    }
+
+    return dummy.next;
+}
