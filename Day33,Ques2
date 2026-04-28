@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 100
+
+int stack[MAX];
+int top = -1;
+
+// Push
+void push(int val) {
+    stack[++top] = val;
+}
+
+// Pop
+int pop() {
+    return stack[top--];
+}
+
+// Check operator
+int isOperator(char* s) {
+    return (strcmp(s, "+") == 0 || strcmp(s, "-") == 0 ||
+            strcmp(s, "*") == 0 || strcmp(s, "/") == 0);
+}
+
+// Evaluate RPN
+int evalRPN(char* tokens[], int n) {
+    for (int i = 0; i < n; i++) {
+        if (!isOperator(tokens[i])) {
+            push(atoi(tokens[i]));
+        } else {
+            int b = pop();
+            int a = pop();
+
+            if (strcmp(tokens[i], "+") == 0)
+                push(a + b);
+            else if (strcmp(tokens[i], "-") == 0)
+                push(a - b);
+            else if (strcmp(tokens[i], "*") == 0)
+                push(a * b);
+            else if (strcmp(tokens[i], "/") == 0)
+                push(a / b);
+        }
+    }
+    return pop();
+}
