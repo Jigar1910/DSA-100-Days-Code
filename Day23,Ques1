@@ -1,0 +1,119 @@
+Merge Two Sorted Linked Lists - Implement using linked list with dynamic memory allocation.
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Insert at end
+struct Node* insertEnd(struct Node* head, int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (head == NULL)
+        return newNode;
+
+    struct Node* temp = head;
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    temp->next = newNode;
+    return head;
+}
+
+// Traverse list
+void traverse(struct Node* head) {
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+// Merge two sorted lists (creates NEW list using dynamic allocation)
+struct Node* mergeLists(struct Node* l1, struct Node* l2) {
+    struct Node* result = NULL;
+    struct Node* tail = NULL;
+
+    while (l1 != NULL && l2 != NULL) {
+        int value;
+
+        if (l1->data <= l2->data) {
+            value = l1->data;
+            l1 = l1->next;
+        } else {
+            value = l2->data;
+            l2 = l2->next;
+        }
+
+        // Create new node
+        struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+        newNode->data = value;
+        newNode->next = NULL;
+
+        if (result == NULL) {
+            result = newNode;
+            tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    // Add remaining elements
+    while (l1 != NULL) {
+        struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+        newNode->data = l1->data;
+        newNode->next = NULL;
+
+        tail->next = newNode;
+        tail = newNode;
+        l1 = l1->next;
+    }
+
+    while (l2 != NULL) {
+        struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+        newNode->data = l2->data;
+        newNode->next = NULL;
+
+        tail->next = newNode;
+        tail = newNode;
+        l2 = l2->next;
+    }
+
+    return result;
+}
+
+// Main function
+int main() {
+    struct Node* list1 = NULL;
+    struct Node* list2 = NULL;
+
+    // First sorted list
+    list1 = insertEnd(list1, 1);
+    list1 = insertEnd(list1, 3);
+    list1 = insertEnd(list1, 5);
+
+    // Second sorted list
+    list2 = insertEnd(list2, 2);
+    list2 = insertEnd(list2, 4);
+    list2 = insertEnd(list2, 6);
+
+    printf("List 1: ");
+    traverse(list1);
+
+    printf("List 2: ");
+    traverse(list2);
+
+    struct Node* merged = mergeLists(list1, list2);
+
+    printf("Merged List: ");
+    traverse(merged);
+
+    return 0;
+}
