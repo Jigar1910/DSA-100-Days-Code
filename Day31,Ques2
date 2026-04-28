@@ -1,0 +1,35 @@
+#include <stdio.h>
+#define MAX 100
+
+int stack[MAX], minStack[MAX];
+int top = -1;
+
+// Push
+void push(int val) {
+    if (top == MAX - 1) return;
+
+    stack[++top] = val;
+
+    if (top == 0)
+        minStack[top] = val;
+    else
+        minStack[top] = (val < minStack[top - 1]) ? val : minStack[top - 1];
+}
+
+// Pop
+void pop() {
+    if (top == -1) return;
+    top--;
+}
+
+// Top
+int getTop() {
+    if (top == -1) return -1;
+    return stack[top];
+}
+
+// Get Minimum
+int getMin() {
+    if (top == -1) return -1;
+    return minStack[top];
+}
