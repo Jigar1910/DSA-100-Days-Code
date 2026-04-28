@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <limits.h>
+
+int maxSubarraySumCircular(int nums[], int n) {
+    int total = 0;
+
+    int max_sum = nums[0], curr_max = 0;
+    int min_sum = nums[0], curr_min = 0;
+
+    for (int i = 0; i < n; i++) {
+        // Kadane for max
+        curr_max = (curr_max > 0) ? curr_max + nums[i] : nums[i];
+        max_sum = (max_sum > curr_max) ? max_sum : curr_max;
+
+        // Kadane for min
+        curr_min = (curr_min < 0) ? curr_min + nums[i] : nums[i];
+        min_sum = (min_sum < curr_min) ? min_sum : curr_min;
+
+        total += nums[i];
+    }
+
+    // If all numbers are negative
+    if (max_sum < 0)
+        return max_sum;
+
+    // Return max of both cases
+    return (max_sum > (total - min_sum)) ? max_sum : (total - min_sum);
+}
