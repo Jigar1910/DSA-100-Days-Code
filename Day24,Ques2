@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Remove all occurrences of val
+struct Node* removeElements(struct Node* head, int val) {
+
+    // Step 1: Remove nodes from beginning
+    while (head != NULL && head->data == val) {
+        struct Node* temp = head;
+        head = head->next;
+        free(temp);
+    }
+
+    struct Node* curr = head;
+
+    // Step 2: Traverse and remove nodes
+    while (curr != NULL && curr->next != NULL) {
+        if (curr->next->data == val) {
+            struct Node* temp = curr->next;
+            curr->next = curr->next->next;
+            free(temp);
+        } else {
+            curr = curr->next;
+        }
+    }
+
+    return head;
+}
