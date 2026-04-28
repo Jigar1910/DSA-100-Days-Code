@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+struct Node {
+    int val;
+    struct Node* next;
+};
+
+// Push all values into stack
+void pushToStack(struct Node* head, int stack[], int* top) {
+    while (head) {
+        stack[++(*top)] = head->val;
+        head = head->next;
+    }
+}
+
+// Add two numbers
+struct Node* addTwoNumbers(struct Node* l1, struct Node* l2) {
+    int s1[MAX], s2[MAX];
+    int top1 = -1, top2 = -1;
+
+    pushToStack(l1, s1, &top1);
+    pushToStack(l2, s2, &top2);
+
+    int carry = 0;
+    struct Node* head = NULL;
+
+    while (top1 >= 0 || top2 >= 0 || carry) {
+        int sum = carry;
+
+        if (top1 >= 0) sum += s1[top1--];
+        if (top2 >= 0) sum += s2[top2--];
+
+        struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+        newNode->val = sum % 10;
+        newNode->next = head; // insert at front
+        head = newNode;
+
+        carry = sum / 10;
+    }
+
+    return head;
+}
