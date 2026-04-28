@@ -1,0 +1,110 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int *arr;
+    int front;
+    int rear;
+    int size;
+} MyCircularDeque;
+
+// Constructor
+MyCircularDeque* myCircularDequeCreate(int k) {
+    MyCircularDeque* obj = (MyCircularDeque*)malloc(sizeof(MyCircularDeque));
+    obj->size = k + 1;
+    obj->arr = (int*)malloc(obj->size * sizeof(int));
+    obj->front = 0;
+    obj->rear = 0;
+    return obj;
+}
+
+// Insert Front
+int myCircularDequeInsertFront(MyCircularDeque* obj, int value) {
+    if ((obj->rear + 1) % obj->size == obj->front)
+        return 0;
+
+    obj->front = (obj->front - 1 + obj->size) % obj->size;
+    obj->arr[obj->front] = value;
+    return 1;
+}
+
+// Insert Last
+int myCircularDequeInsertLast(MyCircularDeque* obj, int value) {
+    if ((obj->rear + 1) % obj->size == obj->front)
+        return 0;
+
+    obj->arr[obj->rear] = value;
+    obj->rear = (obj->rear + 1) % obj->size;
+    return 1;
+}
+
+// Delete Front
+int myCircularDequeDeleteFront(MyCircularDeque* obj) {
+    if (obj->front == obj->rear)
+        return 0;
+
+    obj->front = (obj->front + 1) % obj->size;
+    return 1;
+}
+
+// Delete Last
+int myCircularDequeDeleteLast(MyCircularDeque* obj) {
+    if (obj->front == obj->rear)
+        return 0;
+
+    obj->rear = (obj->rear - 1 + obj->size) % obj->size;
+    return 1;
+}
+
+// Get Front
+int myCircularDequeGetFront(MyCircularDeque* obj) {
+    if (obj->front == obj->rear)
+        return -1;
+
+    return obj->arr[obj->front];
+}
+
+// Get Rear
+int myCircularDequeGetRear(MyCircularDeque* obj) {
+    if (obj->front == obj->rear)
+        return -1;
+
+    return obj->arr[(obj->rear - 1 + obj->size) % obj->size];
+}
+
+// Check Empty
+int myCircularDequeIsEmpty(MyCircularDeque* obj) {
+    return obj->front == obj->rear;
+}
+
+// Check Full
+int myCircularDequeIsFull(MyCircularDeque* obj) {
+    return (obj->rear + 1) % obj->size == obj->front;
+}
+
+// Free memory
+void myCircularDequeFree(MyCircularDeque* obj) {
+    free(obj->arr);
+    free(obj);
+}
+
+// ----------- MAIN (for testing) -----------
+int main() {
+    MyCircularDeque* dq = myCircularDequeCreate(3);
+
+    printf("%d\n", myCircularDequeInsertLast(dq, 1));  // 1
+    printf("%d\n", myCircularDequeInsertLast(dq, 2));  // 1
+    printf("%d\n", myCircularDequeInsertFront(dq, 3)); // 1
+    printf("%d\n", myCircularDequeInsertFront(dq, 4)); // 0 (full)
+
+    printf("Rear: %d\n", myCircularDequeGetRear(dq));   // 2
+    printf("Full: %d\n", myCircularDequeIsFull(dq));    // 1
+
+    printf("%d\n", myCircularDequeDeleteLast(dq));      // 1
+    printf("%d\n", myCircularDequeInsertFront(dq, 4));  // 1
+
+    printf("Front: %d\n", myCircularDequeGetFront(dq)); // 4
+
+    myCircularDequeFree(dq);
+    return 0;
+}
