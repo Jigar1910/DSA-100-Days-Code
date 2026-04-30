@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+// LCA in Binary Tree
+struct Node* LCA(struct Node* root, struct Node* p, struct Node* q) {
+    if (root == NULL)
+        return NULL;
+
+    // If either p or q matches root
+    if (root == p || root == q)
+        return root;
+
+    // Search in left and right subtree
+    struct Node* left = LCA(root->left, p, q);
+    struct Node* right = LCA(root->right, p, q);
+
+    // If both sides return non-null → this is LCA
+    if (left != NULL && right != NULL)
+        return root;
+
+    // Otherwise return non-null child
+    return (left != NULL) ? left : right;
+}
