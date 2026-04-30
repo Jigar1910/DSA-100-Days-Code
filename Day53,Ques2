@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct TreeNode {
+    int val;
+    struct TreeNode* left;
+    struct TreeNode* right;
+};
+
+// Create new node
+struct TreeNode* createNode(int val) {
+    struct TreeNode* node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    node->val = val;
+    node->left = node->right = NULL;
+    return node;
+}
+
+// Level Order Traversal
+void levelOrder(struct TreeNode* root) {
+    if (root == NULL) return;
+
+    struct TreeNode* queue[100];
+    int front = 0, rear = 0;
+
+    queue[rear++] = root;
+
+    while (front < rear) {
+        struct TreeNode* curr = queue[front++];
+
+        printf("%d ", curr->val);
+
+        if (curr->left)
+            queue[rear++] = curr->left;
+
+        if (curr->right)
+            queue[rear++] = curr->right;
+    }
+}
+
+int main() {
+    // Example tree
+    struct TreeNode* root = createNode(3);
+    root->left = createNode(9);
+    root->right = createNode(20);
+    root->right->left = createNode(15);
+    root->right->right = createNode(7);
+
+    printf("Level Order Traversal: ");
+    levelOrder(root);
+
+    return 0;
+}
