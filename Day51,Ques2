@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct TreeNode {
+    int val;
+    struct TreeNode* left;
+    struct TreeNode* right;
+};
+
+// LCA in BST
+struct TreeNode* lowestCommonAncestor(struct TreeNode* root,
+                                      struct TreeNode* p,
+                                      struct TreeNode* q) {
+    if (root == NULL)
+        return NULL;
+
+    // If both nodes are smaller → go left
+    if (p->val < root->val && q->val < root->val)
+        return lowestCommonAncestor(root->left, p, q);
+
+    // If both nodes are greater → go right
+    if (p->val > root->val && q->val > root->val)
+        return lowestCommonAncestor(root->right, p, q);
+
+    // Otherwise, current node is LCA
+    return root;
+}
