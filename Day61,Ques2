@@ -1,0 +1,57 @@
+#include <stdio.h>
+
+#define MAX 1000
+
+int visited[MAX];
+
+void dfs(int rooms[MAX][MAX], int sizes[], int room) {
+    visited[room] = 1;
+
+    for (int i = 0; i < sizes[room]; i++) {
+        int nextRoom = rooms[room][i];
+
+        if (!visited[nextRoom]) {
+            dfs(rooms, sizes, nextRoom);
+        }
+    }
+}
+
+int canVisitAllRooms(int rooms[MAX][MAX], int sizes[], int n) {
+    // Initialize visited
+    for (int i = 0; i < n; i++) {
+        visited[i] = 0;
+    }
+
+    // Start DFS from room 0
+    dfs(rooms, sizes, 0);
+
+    // Check if all rooms are visited
+    for (int i = 0; i < n; i++) {
+        if (!visited[i]) {
+            return 0; // false
+        }
+    }
+
+    return 1; // true
+}
+
+int main() {
+    int n = 4;
+
+    // rooms representation
+    int rooms[MAX][MAX] = {
+        {1},      // room 0 → key to room 1
+        {2},      // room 1 → key to room 2
+        {3},      // room 2 → key to room 3
+        {}        // room 3 → no keys
+    };
+
+    int sizes[] = {1, 1, 1, 0};
+
+    if (canVisitAllRooms(rooms, sizes, n))
+        printf("true");
+    else
+        printf("false");
+
+    return 0;
+}
