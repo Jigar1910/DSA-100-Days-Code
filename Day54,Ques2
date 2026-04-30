@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct TreeNode {
+    int val;
+    struct TreeNode* left;
+    struct TreeNode* right;
+};
+
+// Create node
+struct TreeNode* createNode(int val) {
+    struct TreeNode* node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    node->val = val;
+    node->left = node->right = NULL;
+    return node;
+}
+
+// Zigzag Level Order Traversal
+void zigzagLevelOrder(struct TreeNode* root) {
+    if (root == NULL) return;
+
+    struct TreeNode* queue[100];
+    int front = 0, rear = 0;
+
+    int leftToRight = 1;
+
+    queue[rear++] = root;
+
+    while (front < rear) {
+        int size = rear - front;
+        int level[100];
+
+        for (int i = 0; i < size; i++) {
+            struct TreeNode* curr = queue[front++];
+
+            int index = leftToRight ? i : (size - 1 - i);
+            level[index] = curr->val;
+
+            if (curr->left)
+                queue[rear++] = curr->left;
+
+            if (curr->right)
+                queue[rear++] = curr->right;
+        }
+
+        // Print current level
+        for (int i = 0; i < size; i++)
+            printf("%d ", level[i]);
+
+        leftToRight = !leftToRight; // toggle direction
+    }
+}
+
+int main() {
+    // Example tree
+    struct TreeNode* root = createNode(3);
+    root->left = createNode(9);
+    root->right = createNode(20);
+    root->right->left = createNode(15);
+    root->right->right = createNode(7);
+
+    printf("Zigzag Level Order: ");
+    zigzagLevelOrder(root);
+
+    return 0;
+}
