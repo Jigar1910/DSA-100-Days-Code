@@ -1,0 +1,74 @@
+#include <stdio.h>
+
+#define MAX 1000
+
+int findOrder(int numCourses, int prerequisites[][2], int sizePre, int result[]) {
+    int adj[MAX][MAX];
+    int size[MAX] = {0};
+    int indegree[MAX] = {0};
+
+    // Step 1: Build graph
+    for (int i = 0; i < sizePre; i++) {
+        int a = prerequisites[i][0];
+        int b = prerequisites[i][1];
+
+        adj[b][size[b]++] = a; // edge b → a
+        indegree[a]++;
+    }
+
+    // Step 2: Queue
+    int queue[MAX], front = 0, rear = 0;
+
+    for (int i = 0; i < numCourses; i++) {
+        if (indegree[i] == 0) {
+            queue[rear++] = i;
+        }
+    }
+
+    // Step 3: BFS
+    int index = 0;
+
+    while (front < rear) {
+        int node = queue[front++];
+        result[index++] = node;
+
+        for (int i = 0; i < size[node]; i++) {
+            int neighbor = adj[node][i];
+            indegree[neighbor]--;
+
+            if (indegree[neighbor] == 0) {
+                queue[rear++] = neighbor;
+            }
+        }
+    }
+
+    // Step 4: Check cycle
+    if (index == numCourses)
+        return 1;
+    else
+        return 0;
+}
+
+int main() {
+    int numCourses = 4;
+    int prerequisites[][2] = {
+        {1,0},
+        {2,0},
+        {3,1},
+        {3,2}
+    };
+    int sizePre = 4;
+
+    int result[MAX];
+
+    if (findOrder(numCourses, prerequisites, sizePre, result)) {
+        printf("Course Order: ");
+        for (int i = 0; i < numCourses; i++) {
+            printf("%d ", result[i]);
+        }
+    } else {
+        printf("No valid order (cycle exists)\n");
+    }
+
+    return 0;
+}
