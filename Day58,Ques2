@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct TreeNode {
+    int val;
+    struct TreeNode* left;
+    struct TreeNode* right;
+};
+
+// Create node
+struct TreeNode* createNode(int val) {
+    struct TreeNode* node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    node->val = val;
+    node->left = node->right = NULL;
+    return node;
+}
+
+// Search index in inorder
+int search(int inorder[], int start, int end, int val) {
+    for (int i = start; i <= end; i++) {
+        if (inorder[i] == val)
+            return i;
+    }
+    return -1;
+}
+
+// Build tree
+struct TreeNode* buildTree(int inorder[], int postorder[],
+                          int inStart, int inEnd, int* postIndex) {
+    if (inStart > inEnd)
+        return NULL;
+
+    // Last element in postorder = root
+    int curr = postorder[*postIndex];
+    (*postIndex)--;
+
+    struct TreeNode* node = createNode(curr);
+
+    // If leaf node
+    if (inStart == inEnd)
+        return node;
+
+    // Find root index in inorder
+    int pos = search(inorder, inStart, inEnd, curr);
+
+    // IMPORTANT: build right subtree first
+    node->right = buildTree(inorder, postorder, pos + 1, inEnd, postIndex);
+    node->left  = buildTree(inorder, postorder, inStart, pos - 1, postIndex);
+
+    return node;
+}
