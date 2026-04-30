@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+// Create node
+struct Node* createNode(int data) {
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = data;
+    node->left = node->right = NULL;
+    return node;
+}
+
+// Convert to mirror
+struct Node* mirror(struct Node* root) {
+    if (root == NULL)
+        return NULL;
+
+    // Swap left and right
+    struct Node* temp = root->left;
+    root->left = root->right;
+    root->right = temp;
+
+    // Recur on children
+    mirror(root->left);
+    mirror(root->right);
+
+    return root;
+}
