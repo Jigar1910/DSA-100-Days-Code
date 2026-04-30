@@ -1,0 +1,57 @@
+#include <stdio.h>
+
+#define MAX 100
+
+void dfs(int image[MAX][MAX], int m, int n, int r, int c, int originalColor, int newColor) {
+    // Boundary check
+    if (r < 0 || r >= m || c < 0 || c >= n)
+        return;
+
+    // If color doesn't match, stop
+    if (image[r][c] != originalColor)
+        return;
+
+    // Change color
+    image[r][c] = newColor;
+
+    // Explore 4 directions
+    dfs(image, m, n, r+1, c, originalColor, newColor);
+    dfs(image, m, n, r-1, c, originalColor, newColor);
+    dfs(image, m, n, r, c+1, originalColor, newColor);
+    dfs(image, m, n, r, c-1, originalColor, newColor);
+}
+
+void floodFill(int image[MAX][MAX], int m, int n, int sr, int sc, int color) {
+    int originalColor = image[sr][sc];
+
+    // Edge case
+    if (originalColor == color)
+        return;
+
+    dfs(image, m, n, sr, sc, originalColor, color);
+}
+
+int main() {
+    int m = 3, n = 3;
+
+    int image[MAX][MAX] = {
+        {1,1,1},
+        {1,1,0},
+        {1,0,1}
+    };
+
+    int sr = 1, sc = 1, color = 2;
+
+    floodFill(image, m, n, sr, sc, color);
+
+    // Print result
+    printf("Updated Image:\n");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%d ", image[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
