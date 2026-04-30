@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+// Create node
+struct Node* createNode(int data) {
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = data;
+    node->left = node->right = NULL;
+    return node;
+}
+
+// Right View
+void rightView(struct Node* root) {
+    if (root == NULL) return;
+
+    struct Node* queue[100];
+    int front = 0, rear = 0;
+
+    queue[rear++] = root;
+
+    while (front < rear) {
+        int size = rear - front;
+
+        for (int i = 0; i < size; i++) {
+            struct Node* curr = queue[front++];
+
+            // Print last node of each level
+            if (i == size - 1)
+                printf("%d ", curr->data);
+
+            if (curr->left)
+                queue[rear++] = curr->left;
+
+            if (curr->right)
+                queue[rear++] = curr->right;
+        }
+    }
+}
+
+int main() {
+    // Example tree
+    struct Node* root = createNode(1);
+    root->left = createNode(2);
+    root->right = createNode(3);
+    root->left->right = createNode(5);
+    root->right->right = createNode(4);
+
+    printf("Right View: ");
+    rightView(root);
+
+    return 0;
+}
