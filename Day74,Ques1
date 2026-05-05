@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+// Structure to store candidate and votes
+struct Candidate {
+    char name[50];
+    int count;
+};
+
+int main() {
+    int n;
+    char votes[MAX][50];
+
+    printf("Enter number of votes: ");
+    scanf("%d", &n);
+
+    printf("Enter candidate names:\n");
+    for(int i = 0; i < n; i++) {
+        scanf("%s", votes[i]);
+    }
+
+    struct Candidate arr[MAX];
+    int size = 0;
+
+    // Count votes
+    for(int i = 0; i < n; i++) {
+        int found = 0;
+
+        for(int j = 0; j < size; j++) {
+            if(strcmp(arr[j].name, votes[i]) == 0) {
+                arr[j].count++;
+                found = 1;
+                break;
+            }
+        }
+
+        if(!found) {
+            strcpy(arr[size].name, votes[i]);
+            arr[size].count = 1;
+            size++;
+        }
+    }
+
+    // Find winner
+    char winner[50];
+    int maxVotes = -1;
+
+    for(int i = 0; i < size; i++) {
+        if(arr[i].count > maxVotes) {
+            maxVotes = arr[i].count;
+            strcpy(winner, arr[i].name);
+        }
+        else if(arr[i].count == maxVotes) {
+            if(strcmp(arr[i].name, winner) < 0) {
+                strcpy(winner, arr[i].name);
+            }
+        }
+    }
+
+    printf("Winner: %s\nVotes: %d\n", winner, maxVotes);
+
+    return 0;
+}
