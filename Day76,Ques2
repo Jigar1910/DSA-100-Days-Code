@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+// Graph node structure
+struct Node {
+    int val;
+    int numNeighbors;
+    struct Node* neighbors[MAX];
+};
+
+// Mapping original → cloned
+struct Node* visited[MAX];
+
+// Create new node
+struct Node* createNode(int val) {
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->val = val;
+    node->numNeighbors = 0;
+    return node;
+}
+
+// DFS clone function
+struct Node* cloneGraph(struct Node* node) {
+    if (node == NULL)
+        return NULL;
+
+    // If already cloned
+    if (visited[node->val] != NULL)
+        return visited[node->val];
+
+    // Create clone
+    struct Node* clone = createNode(node->val);
+    visited[node->val] = clone;
+
+    // Clone neighbors
+    for (int i = 0; i < node->numNeighbors; i++) {
+        clone->neighbors[clone->numNeighbors++] =
+            cloneGraph(node->neighbors[i]);
+    }
+
+    return clone;
+}
+
+int main() {
+
+    // Initialize visited array
+    for (int i = 0; i < MAX; i++)
+        visited[i] = NULL;
+
+    // Create sample graph (1--2--3--4 cycle)
+    struct Node* n1 = createNode(1);
+    struct Node* n2 = createNode(2);
+    struct Node* n3 = createNode(3);
+    struct Node* n4 = createNode(4);
+
+    // Connect nodes
+    n1->neighbors[n1->numNeighbors++] = n2;
+    n1->neighbors[n1->numNeighbors++] = n4;
+
+    n2->neighbors[n2->numNeighbors++] = n1;
+    n2->neighbors[n2->numNeighbors++] = n3;
+
+    n3->neighbors[n3->numNeighbors++] = n2;
+    n3->neighbors[n3->numNeighbors++] = n4;
+
+    n4->neighbors[n4->numNeighbors++] = n1;
+    n4->neighbors[n4->numNeighbors++] = n3;
+
+    // Clone graph
+    struct Node* clonedGraph = cloneGraph(n1);
+
+    printf("Cloned node value: %d\n", clonedGraph->val);
+
+    return 0;
+}
