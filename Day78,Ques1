@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <limits.h>
+
+#define MAX 100
+
+int graph[MAX][MAX];
+
+// Find vertex with minimum key
+int minKey(int key[], int visited[], int n) {
+    int min = INT_MAX, index = -1;
+
+    for(int i = 0; i < n; i++) {
+        if(!visited[i] && key[i] < min) {
+            min = key[i];
+            index = i;
+        }
+    }
+    return index;
+}
+
+int primMST(int n) {
+    int key[MAX];
+    int visited[MAX];
+
+    for(int i = 0; i < n; i++) {
+        key[i] = INT_MAX;
+        visited[i] = 0;
+    }
+
+    key[0] = 0;
+    int totalCost = 0;
+
+    for(int i = 0; i < n; i++) {
+        int u = minKey(key, visited, n);
+        visited[u] = 1;
+        totalCost += key[u];
+
+        for(int v = 0; v < n; v++) {
+            if(graph[u][v] && !visited[v] && graph[u][v] < key[v]) {
+                key[v] = graph[u][v];
+            }
+        }
+    }
+
+    return totalCost;
+}
+
+int main() {
+    int n, m;
+
+    printf("Enter number of nodes and edges: ");
+    scanf("%d %d", &n, &m);
+
+    // Initialize graph
+    for(int i = 0; i < n; i++)
+        for(int j = 0; j < n; j++)
+            graph[i][j] = 0;
+
+    printf("Enter edges (u v w):\n");
+    for(int i = 0; i < m; i++) {
+        int u, v, w;
+        scanf("%d %d %d", &u, &v, &w);
+
+        graph[u][v] = w;
+        graph[v][u] = w; // undirected
+    }
+
+    int result = primMST(n);
+
+    printf("Total weight of MST: %d\n", result);
+
+    return 0;
+}
