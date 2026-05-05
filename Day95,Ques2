@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+int maximumGap(int nums[], int n) {
+    if (n < 2) return 0;
+
+    int min = nums[0], max = nums[0];
+
+    // Find min and max
+    for (int i = 1; i < n; i++) {
+        if (nums[i] < min) min = nums[i];
+        if (nums[i] > max) max = nums[i];
+    }
+
+    if (min == max) return 0;
+
+    // Bucket size
+    int gap = (max - min + n - 2) / (n - 1);
+
+    int bucketSize = (max - min) / gap + 1;
+
+    int bucketMin[bucketSize], bucketMax[bucketSize];
+
+    // Initialize buckets
+    for (int i = 0; i < bucketSize; i++) {
+        bucketMin[i] = INT_MAX;
+        bucketMax[i] = INT_MIN;
+    }
+
+    // Fill buckets
+    for (int i = 0; i < n; i++) {
+        int index = (nums[i] - min) / gap;
+
+        if (nums[i] < bucketMin[index])
+            bucketMin[index] = nums[i];
+
+        if (nums[i] > bucketMax[index])
+            bucketMax[index] = nums[i];
+    }
+
+    // Find max gap
+    int maxGap = 0;
+    int prevMax = min;
+
+    for (int i = 0; i < bucketSize; i++) {
+        if (bucketMin[i] == INT_MAX)
+            continue;
+
+        if (bucketMin[i] - prevMax > maxGap)
+            maxGap = bucketMin[i] - prevMax;
+
+        prevMax = bucketMax[i];
+    }
+
+    return maxGap;
+}
+
+int main() {
+    int nums[] = {3, 6, 9, 1};
+    int n = 4;
+
+    printf("Maximum gap: %d\n", maximumGap(nums, n));
+
+    return 0;
+}
