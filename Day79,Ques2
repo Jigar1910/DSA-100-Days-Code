@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void dfs(int node, vector<vector<int>>& adj, vector<int>& visited, stack<int>& st) {
+    visited[node] = 1;
+
+    for (auto it : adj[node]) {
+        if (!visited[it]) {
+            dfs(it, adj, visited, st);
+        }
+    }
+
+    st.push(node);
+}
+
+void dfs2(int node, vector<vector<int>>& transpose, vector<int>& visited) {
+    visited[node] = 1;
+
+    for (auto it : transpose[node]) {
+        if (!visited[it]) {
+            dfs2(it, transpose, visited);
+        }
+    }
+}
+
+int kosaraju(int V, vector<vector<int>>& edges) {
+    vector<vector<int>> adj(V);
+
+    // Step 1: Build graph
+    for (auto e : edges) {
+        adj[e[0]].push_back(e[1]);
+    }
+
+    vector<int> visited(V, 0);
+    stack<int> st;
+
+    // Step 2: Fill stack
+    for (int i = 0; i < V; i++) {
+        if (!visited[i]) {
+            dfs(i, adj, visited, st);
+        }
+    }
+
+    // Step 3: Transpose graph
+    vector<vector<int>> transpose(V);
+    for (int i = 0; i < V; i++) {
+        for (auto it : adj[i]) {
+            transpose[it].push_back(i);
+        }
+    }
+
+    // Step 4: DFS on transpose
+    fill(visited.begin(), visited.end(), 0);
+    int scc_count = 0;
+
+    while (!st.empty()) {
+        int node = st.top();
+        st.pop();
+
+        if (!visited[node]) {
+            dfs2(node, transpose, visited);
+            scc_count++;
+        }
+    }
+
+    return scc_count;
+}
+
+int main() {
+    int V = 5;
+    vector<vector<int>> edges = {
+        {1,0},{0,2},{2,1},{0,3},{3,4}
+    };
+
+    cout << kosaraju(V, edges);
+    return 0;
+}
