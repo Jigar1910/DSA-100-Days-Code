@@ -1,0 +1,52 @@
+#include <stdio.h>
+
+// Swap
+void swap(int *a, int *b) {
+    int t = *a; *a = *b; *b = t;
+}
+
+// Lomuto partition (pivot = arr[high])
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
+    int i = low;
+
+    for (int j = low; j < high; j++) {
+        if (arr[j] <= pivot) {
+            swap(&arr[i], &arr[j]);
+            i++;
+        }
+    }
+    swap(&arr[i], &arr[high]);
+    return i;
+}
+
+// Quickselect to find k-th smallest index
+int quickSelect(int arr[], int low, int high, int kIndex) {
+    if (low <= high) {
+        int pi = partition(arr, low, high);
+
+        if (pi == kIndex)
+            return arr[pi];
+        else if (pi < kIndex)
+            return quickSelect(arr, pi + 1, high, kIndex);
+        else
+            return quickSelect(arr, low, pi - 1, kIndex);
+    }
+    return -1; // shouldn't happen
+}
+
+int findKthLargest(int nums[], int n, int k) {
+    int targetIndex = n - k; // kth largest -> (n-k)th smallest
+    return quickSelect(nums, 0, n - 1, targetIndex);
+}
+
+int main() {
+    int nums[] = {3,2,1,5,6,4};
+    int n = 6;
+    int k = 2;
+
+    int ans = findKthLargest(nums, n, k);
+    printf("%dth largest element: %d\n", k, ans);
+
+    return 0;
+}
