@@ -1,0 +1,55 @@
+#include <stdio.h>
+
+#define MAX 100
+
+int visited[MAX];
+
+// DFS function
+void dfs(int city, int n, int isConnected[][MAX]) {
+    visited[city] = 1;
+
+    for(int j = 0; j < n; j++) {
+        if(isConnected[city][j] == 1 && !visited[j]) {
+            dfs(j, n, isConnected);
+        }
+    }
+}
+
+int findCircleNum(int isConnected[][MAX], int n) {
+    int provinces = 0;
+
+    for(int i = 0; i < n; i++) {
+        if(!visited[i]) {
+            dfs(i, n, isConnected);
+            provinces++;
+        }
+    }
+
+    return provinces;
+}
+
+int main() {
+    int n;
+
+    printf("Enter number of cities: ");
+    scanf("%d", &n);
+
+    int isConnected[MAX][MAX];
+
+    printf("Enter adjacency matrix:\n");
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            scanf("%d", &isConnected[i][j]);
+        }
+    }
+
+    // Initialize visited
+    for(int i = 0; i < n; i++)
+        visited[i] = 0;
+
+    int result = findCircleNum(isConnected, n);
+
+    printf("Number of Provinces: %d\n", result);
+
+    return 0;
+}
